@@ -109,6 +109,248 @@ p.desc {
 .btn-main { 
   padding: 15px 35px; border-radius: 30px; border: none; font-weight: 700;
   background: white; color: #ff4d6d; box-shadow: 0 8px 20px rgba(255, 77, 109, 0.2); 
+  cursor: pointer;
+}
+
+/* FOOTER MADE WITH LOVE */
+.made-with-love {
+  position: absolute;
+  bottom: 25px;
+  font-size: 0.75rem;
+  color: white;
+  opacity: 0.7;
+}
+
+/* GAME ELEMENTS */
+#game-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 20; }
+.heart-target { position: absolute; font-size: 45px; cursor: pointer; pointer-events: auto; animation: popUp 0.3s ease; }
+
+/* SURPRISE PAGE */
+#surprise {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000;
+  display: none; justify-content: center; align-items: flex-start; z-index: 100;
+  padding: 40px 20px; overflow-y: auto; -webkit-overflow-scrolling: touch;
+}
+.card {
+  background: #1e1e1e; padding: 25px; border-radius: 25px; width: 100%; max-width: 340px;
+  text-align: center; border: 1px solid #333; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  margin-top: 20px;
+  margin-bottom: 40px; /* Jarak scroll bawah */
+}
+
+/* FOTO TETAP KOTAK WALAUPUN CROP MANUAL KURANG PAS */
+.photo { 
+  width: 100%; 
+  aspect-ratio: 1/1; 
+  object-fit: cover; 
+  border-radius: 18px; 
+  margin-bottom: 20px; 
+}
+#text { font-size: 0.95rem; line-height: 1.7; white-space: pre-line; color: #eee; }
+
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+@keyframes popUp { from { transform: scale(0); } to { transform: scale(1); } }
+</style>
+</head>
+<body>
+
+<div id="game-canvas"></div>
+
+<nav>
+  <div class="nav-left"><h2>#madewithlove💖</h2></div>
+  <div id="nav-clock">00:00</div>
+  <div class="nav-right">
+    <span class="name">Hi, Sayang ✨</span>
+  </div>
+</nav>
+
+<div class="container">
+  <h1>Happy Birthday 🎂</h1>
+  <h3>Special for Ica 💕</h3>
+  <p class="desc" id="instruction">Hari ini bukan hari biasa… karena Sayang lahir ke dunia ✨</p>
+
+  <div class="progress-wrapper" id="prog-bar">
+    <div id="progress-fill"></div>
+  </div>
+
+  <div class="buttons">
+    <button class="btn-main" id="primary-btn" onclick="startChallenge()">Open 🎁</button>
+  </div>
+
+  <p class="made-with-love">Made with love by [Nama Kamu] 💖</p>
+</div>
+
+<div id="music-toggle" onclick="toggleMusic()">🔊</div>
+
+<div id="surprise">
+  <div class="card">
+    <img src="foto.jpg" class="photo">
+    <p id="text"></p>
+    <button onclick="location.reload()" style="margin-top:25px; background:none; border:none; color:#ff8fab; font-size:0.9rem; text-decoration:underline; cursor:pointer;">Tutup</button>
+  </div>
+  
+  <audio id="music" loop><source src="lagu.mp3" type="audio/mpeg"></audio>
+</div>
+
+<script>
+// UPDATE JAM DI NAVBAR
+function updateTime() {
+    const now = new Date();
+    const h = String(now.getHours()).padStart(2, '0');
+    const m = String(now.getMinutes()).padStart(2, '0');
+    document.getElementById('nav-clock').innerText = h + ":" + m;
+}
+setInterval(updateTime, 1000);
+updateTime();
+
+// KONTROL MUSIK
+let isMuted = false;
+function toggleMusic() {
+    const music = document.getElementById('music');
+    const icon = document.getElementById('music-toggle');
+    if (isMuted) { music.muted = false; icon.innerText = "🔊"; } 
+    else { music.muted = true; icon.innerText = "🔇"; }
+    isMuted = !isMuted;
+}
+
+let heartCount = 0;
+const totalHearts = 5;
+
+function startChallenge() {
+  document.getElementById('primary-btn').style.display = 'none';
+  document.getElementById('prog-bar').style.display = 'block';
+  document.getElementById('instruction').innerText = "Tangkap 5 💖 untuk membuktikan cintamu!";
+  spawnHeart();
+}
+
+function spawnHeart() {
+  if (heartCount >= totalHearts) { finishChallenge(); return; }
+  const heart = document.createElement('div');
+  heart.className = 'heart-target';
+  heart.innerHTML = '💖'; 
+  const x = Math.random() * (window.innerWidth - 70);
+  const y = Math.random() * (window.innerHeight - 150) + 70;
+  heart.style.left = x + 'px'; heart.style.top = y + 'px';
+  heart.onclick = function() {
+    heartCount++;
+    document.getElementById('progress-fill').style.width = (heartCount / totalHearts * 100) + '%';
+    this.remove(); spawnHeart();
+  };
+  document.getElementById('game-canvas').appendChild(heart);
+}
+
+function finishChallenge() {
+  document.getElementById('instruction').innerText = "Cintamu terbukti! ✨";
+  document.getElementById('prog-bar').style.display = 'none';
+  const btn = document.getElementById('primary-btn');
+  btn.style.display = 'block'; btn.innerText = "Buka Kado Sayang 🎁";
+  btn.onclick = openSurprise;
+  confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+}
+
+function openSurprise() {
+  document.getElementById("surprise").style.display = "flex";
+  document.getElementById("music").play().catch(() => {});
+  confetti({ particleCount: 150, spread: 100, origin: { y: 0.3 }, colors: ['#ff8fab', '#ffffff'] });
+
+  const text = `Selamat ulang tahun ya, Sayang... 🎂💖
+
+Di hari spesial kamu ini, aku cuma mau jujur dari hati yang paling dalam... Aku sadar selama ini aku masih sering banget ngecewain kamu. Aku tau aku belum bisa jadi yang terbaik dan mungkin belum sesuai sama apa yang kamu harapkan. Maafin aku ya.
+
+Tapi di balik semua kekuranganku itu, aku bener-bener bersyukur punya kamu di hidupku. Terima kasih banyak ya udah tetap memilih untuk ada di sini, udah sabar banget ngadepin aku, dan nggak pernah menyerah sama keadaan kita. ✨
+
+Semoga di umur kamu yang sekarang, kamu selalu dikelilingi kebahagiaan yang nggak habis-habis. Aku janji, pelan-pelan aku bakal terus berusaha buat jadi lebih baik lagi buat kamu, karena aku bener-bener tulus sayang sama kamu.
+
+You mean the world to me. Happy birthday, Sayang! 💕`;
+
+  typeEffect(text);
+}
+
+function typeEffect(text) {
+  let i = 0; const el = document.getElementById("text"); el.innerHTML = "";
+  function typing() {
+    if (i < text.length) { el.innerHTML += text.charAt(i); i++; setTimeout(typing, 55); }
+  }
+  typing();
+}
+</script>
+</body>
+</html>
+  z-index: 10;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.nav-left h2 { color: white; font-size: 0.9rem; letter-spacing: 0.5px; }
+
+/* Jam di Tengah Navbar */
+#nav-clock {
+  color: white;
+  font-weight: 700;
+  font-size: 1rem;
+  background: rgba(255,255,255,0.2);
+  padding: 2px 12px;
+  border-radius: 10px;
+}
+
+.nav-right .name { 
+    color: white; font-size: 0.8rem; font-weight: 500;
+    background: rgba(255,255,255,0.2);
+    padding: 4px 12px; border-radius: 15px;
+}
+
+/* HERO CONTAINER */
+.container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+  z-index: 5;
+}
+
+h1 { font-size: 2.8rem; color: white; line-height: 1.1; margin-bottom: 5px; animation: float 3s ease-in-out infinite; }
+h3 { color: #ffe4ec; font-weight: 500; margin-bottom: 10px; font-size: 1.1rem; }
+
+p.desc {
+  color: #fff; font-size: 0.85rem; max-width: 280px; line-height: 1.5; opacity: 0.9;
+}
+
+/* TOMBOL MUTE DI BAWAH (FLOATING) */
+#music-toggle {
+  position: fixed;
+  bottom: 25px;
+  right: 20px;
+  width: 45px;
+  height: 45px;
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 20px;
+  border: 1px solid rgba(255,255,255,0.4);
+  cursor: pointer;
+  z-index: 200;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+/* PROGRESS BAR */
+.progress-wrapper {
+  width: 180px; height: 6px; background: rgba(255, 255, 255, 0.3);
+  border-radius: 10px; margin-top: 20px; display: none; overflow: hidden;
+}
+#progress-fill { width: 0%; height: 100%; background: white; transition: width 0.3s ease; }
+
+/* BUTTONS */
+.buttons { margin-top: 35px; }
+.btn-main { 
+  padding: 15px 35px; border-radius: 30px; border: none; font-weight: 700;
+  background: white; color: #ff4d6d; box-shadow: 0 8px 20px rgba(255, 77, 109, 0.2); 
 }
 
 /* GAME ELEMENTS */
