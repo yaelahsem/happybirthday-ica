@@ -25,7 +25,7 @@ body {
   flex-direction: column;
 }
 
-/* NAVBAR - BERSIH DI ATAS */
+/* NAVBAR */
 nav {
   display: flex;
   justify-content: space-between;
@@ -40,7 +40,6 @@ nav {
 
 .nav-left h2 { color: white; font-size: 0.9rem; letter-spacing: 0.5px; }
 
-/* Jam di Tengah Navbar */
 #nav-clock {
   color: white;
   font-weight: 700;
@@ -125,20 +124,32 @@ p.desc {
 #game-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 20; }
 .heart-target { position: absolute; font-size: 45px; cursor: pointer; pointer-events: auto; animation: popUp 0.3s ease; }
 
-/* SURPRISE PAGE */
+/* SURPRISE PAGE OVERLAY - PINK BLUR */
 #surprise {
-  position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000;
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+  background: rgba(255, 214, 224, 0.4); 
   display: none; justify-content: center; align-items: flex-start; z-index: 100;
-  padding: 40px 20px; overflow-y: auto; -webkit-overflow-scrolling: touch;
-}
-.card {
-  background: #1e1e1e; padding: 25px; border-radius: 25px; width: 100%; max-width: 340px;
-  text-align: center; border: 1px solid #333; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-  margin-top: 20px;
-  margin-bottom: 40px; /* Jarak scroll bawah */
+  padding: 40px 20px; 
+  overflow-y: auto; 
+  -webkit-overflow-scrolling: touch;
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
 }
 
-/* FOTO TETAP KOTAK WALAUPUN CROP MANUAL KURANG PAS */
+/* REVISI: CARD PUTIH BERSIH */
+.card {
+  background: #ffffff; 
+  padding: 25px; 
+  border-radius: 25px; 
+  width: 100%; 
+  max-width: 340px;
+  text-align: center; 
+  border: 1px solid #ffcad9; 
+  box-shadow: 0 20px 50px rgba(255, 143, 171, 0.2); /* Shadow pink lembut */
+  margin-top: 20px;
+  margin-bottom: 40px; 
+}
+
 .photo { 
   width: 100%; 
   aspect-ratio: 1/1; 
@@ -146,7 +157,14 @@ p.desc {
   border-radius: 18px; 
   margin-bottom: 20px; 
 }
-#text { font-size: 0.95rem; line-height: 1.7; white-space: pre-line; color: #eee; }
+
+/* REVISI: TEKS ABU-ABU AGAR TERBACA JELAS DI BACKGROUND PUTIH */
+#text { 
+  font-size: 0.95rem; 
+  line-height: 1.7; 
+  white-space: pre-line; 
+  color: #444444; 
+}
 
 @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
 @keyframes popUp { from { transform: scale(0); } to { transform: scale(1); } }
@@ -177,7 +195,7 @@ p.desc {
     <button class="btn-main" id="primary-btn" onclick="startChallenge()">Open 🎁</button>
   </div>
 
-  <p class="made-with-love">Made with love by sem 💖</p>
+  <p class="made-with-love">Made with love by sem💖</p>
 </div>
 
 <div id="music-toggle" onclick="toggleMusic()">🔊</div>
@@ -186,7 +204,7 @@ p.desc {
   <div class="card">
     <img src="foto.jpg" class="photo">
     <p id="text"></p>
-    <button onclick="location.reload()" style="margin-top:25px; background:none; border:none; color:#ff8fab; font-size:0.9rem; text-decoration:underline; cursor:pointer;">Tutup</button>
+    <button onclick="location.reload()" style="margin-top:25px; background:none; border:none; color:#ff4d6d; font-weight: 500; font-size:0.95rem; text-decoration:underline; cursor:pointer;">Tutup</button>
   </div>
   
   <audio id="music" loop><source src="lagu.mp3" type="audio/mpeg"></audio>
@@ -253,15 +271,7 @@ function openSurprise() {
   document.getElementById("music").play().catch(() => {});
   confetti({ particleCount: 150, spread: 100, origin: { y: 0.3 }, colors: ['#ff8fab', '#ffffff'] });
 
-  const text = `Selamat ulang tahun ya, Sayang... 🎂💖
-
-Di hari spesial kamu ini, aku cuma mau jujur dari hati yang paling dalam... Aku sadar selama ini aku masih sering banget ngecewain kamu. Aku tau aku belum bisa jadi yang terbaik dan mungkin belum sesuai sama apa yang kamu harapkan. Maafin aku ya.
-
-Tapi di balik semua kekuranganku itu, aku bener-bener bersyukur punya kamu di hidupku. Terima kasih banyak ya udah tetap memilih untuk ada di sini, udah sabar banget ngadepin aku, dan nggak pernah menyerah sama keadaan kita. ✨
-
-Semoga di umur kamu yang sekarang, kamu selalu dikelilingi kebahagiaan yang nggak habis-habis. Aku janji, pelan-pelan aku bakal terus berusaha buat jadi lebih baik lagi buat kamu, karena aku bener-bener tulus sayang sama kamu.
-
-You mean the world to me. Happy birthday, Sayang! 💕`;
+  const text = `Selamat ulang tahun ya, Sayang... 🎂💖\n\nDi hari spesial kamu ini, aku cuma mau jujur dari hati yang paling dalam... Aku sadar selama ini aku masih sering banget ngecewain kamu. Aku tau aku belum bisa jadi yang terbaik dan mungkin belum sesuai sama apa yang kamu harapkan. Maafin aku ya.\n\nTapi di balik semua kekuranganku itu, aku bener-bener bersyukur punya kamu di hidupku. Terima kasih banyak ya udah tetap memilih untuk ada di sini, udah sabar banget ngadepin aku, dan nggak pernah menyerah sama keadaan kita. ✨\n\nSemoga di umur kamu yang sekarang, kamu selalu dikelilingi kebahagiaan yang nggak habis-habis. Aku janji, pelan-pelan aku bakal terus berusaha buat jadi lebih baik lagi buat kamu, karena aku bener-bener tulus sayang sama kamu.\n\nYou mean the world to me. Happy birthday, Sayang! 💕`;
 
   typeEffect(text);
 }
@@ -269,7 +279,15 @@ You mean the world to me. Happy birthday, Sayang! 💕`;
 function typeEffect(text) {
   let i = 0; const el = document.getElementById("text"); el.innerHTML = "";
   function typing() {
-    if (i < text.length) { el.innerHTML += text.charAt(i); i++; setTimeout(typing, 55); }
+    if (i < text.length) { 
+      // Handle baris baru
+      if (text.charAt(i) === '\n') {
+        el.innerHTML += '<br>';
+      } else {
+        el.innerHTML += text.charAt(i); 
+      }
+      i++; setTimeout(typing, 55); 
+    }
   }
   typing();
 }
